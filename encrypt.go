@@ -1,4 +1,4 @@
-package utils
+package iutils
 
 import (
 	"crypto/md5"
@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-const Pubsalt = "iufan"
+const Pubsalt = "iueun"
 
 //md5方法
 func Md5(ss ...string) string {
@@ -23,6 +23,12 @@ func Md5(ss ...string) string {
 		}
 	}
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+func Md5File(file io.Reader) string {
+	md5 := md5.New()
+	io.Copy(md5,file)
+	return hex.EncodeToString(md5.Sum(nil))
 }
 
 //Guid方法

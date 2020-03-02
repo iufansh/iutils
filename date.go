@@ -1,4 +1,4 @@
-package utils
+package iutils
 
 import (
 	"net/http"
@@ -41,4 +41,20 @@ func TimeSub(t1, t2 time.Time) int {
 	t2 = time.Date(t2.Year(), t2.Month(), t2.Day(), 0, 0, 0, 0, time.Local)
 
 	return int(t1.Sub(t2).Hours() / 24)
+}
+
+// 格式2006-01-02 15:04:05
+func FormatDatetime(d time.Time) string {
+	if d.IsZero() {
+		return ""
+	}
+	return d.Format("2006-01-02 15:04:05")
+}
+
+// 格式20060102150405
+func FormatDatetimeKeepNumber(d time.Time) string {
+	if d.IsZero() {
+		return ""
+	}
+	return d.Format("20060102150405")
 }

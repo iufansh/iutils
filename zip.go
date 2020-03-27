@@ -11,6 +11,10 @@ import (
 )
 
 func Zip(dstPath, dstName, src string) (err error) {
+	return ZipFilter(dstPath, dstName, src, nil)
+}
+
+func ZipFilter(dstPath, dstName, src string, targetNames []string) (err error) {
 	if !strings.HasSuffix(dstPath, string(filepath.Separator)) {
 		dstPath += string(filepath.Separator)
 	}
@@ -21,20 +25,19 @@ func Zip(dstPath, dstName, src string) (err error) {
 	}
 	// 创建准备写入的文件
 	fw, err := os.Create(dstPath + dstName)
-	defer fw.Close()
 	if err != nil {
 		return err
 	}
+	defer fw.Close()
 
 	// 通过 fw 来创建 zip.Write
 	zw := zip.NewWriter(fw)
 	defer func() {
 		// 检测一下是否成功关闭
 		if err := zw.Close(); err != nil {
-			log.Fatalln(err)
+			log.Panic(err)
 		}
 	}()
-
 	// 下面来将文件写入 zw ，因为有可能会有很多个目录及文件，所以递归处理
 	return filepath.Walk(src, func(path string, fi os.FileInfo, errBack error) (err error) {
 		if errBack != nil {
@@ -49,12 +52,16 @@ func Zip(dstPath, dstName, src string) (err error) {
 
 		// 替换文件信息中的文件名
 		fh.Name = strings.TrimPrefix(strings.TrimPrefix(path, src), string(filepath.Separator))
+		if fh.Name == "" {
+			return
+		}
+		if !hasName(targetNames, fh.Name) {
+			fmt.Println("notHasName=" + fh.Name)
+			return
+		}
 		//fh.Name = ""
 		// 这步开始没有加，会发现解压的时候说它不是个目录
 		if fi.IsDir() {
-			if fh.Name == "" {
-				return
-			}
 			//return
 			fh.Name += "/"
 		}
@@ -73,10 +80,10 @@ func Zip(dstPath, dstName, src string) (err error) {
 
 		// 打开要压缩的文件
 		fr, err := os.Open(path)
-		defer fr.Close()
 		if err != nil {
 			return
 		}
+		defer fr.Close()
 
 		// 将打开的文件 Copy 到 w
 		_, err = io.Copy(w, fr)
@@ -88,6 +95,16 @@ func Zip(dstPath, dstName, src string) (err error) {
 
 		return nil
 	})
+}
+
+func hasName(nameArr []string, name string) bool {
+	var i int
+	for ; i < len(nameArr); i++ {
+		if nameArr[i] == name {
+			return true
+		}
+	}
+	return false
 }
 
 // 从网上copy,未使用，未完善

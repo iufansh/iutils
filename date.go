@@ -1,14 +1,14 @@
 package iutils
 
 import (
-	"net/http"
-	"time"
+	"fmt"
 	"github.com/pkg/errors"
 	"io/ioutil"
-	"strings"
+	"net/http"
 	"regexp"
 	"strconv"
-	"fmt"
+	"strings"
+	"time"
 )
 
 func GetNetTime() (time.Time, error) {
@@ -57,4 +57,24 @@ func FormatDatetimeKeepNumber(d time.Time) string {
 		return ""
 	}
 	return d.Format("20060102150405")
+}
+
+//判断时间是当年的第几周,周一为第一天
+func WeekByDate(t time.Time) int {
+	yearDay := t.YearDay()
+	yearFirstDay := t.AddDate(0, 0, -yearDay+1)
+	firstDayInWeek := int(yearFirstDay.Weekday())
+
+	//今年第一周有几天
+	firstWeekDays := 1
+	if firstDayInWeek != 0 {
+		firstWeekDays = 7 - firstDayInWeek + 1
+	}
+	var week int
+	if yearDay <= firstWeekDays {
+		week = 1
+	} else {
+		week = (yearDay-firstWeekDays-1)/7 + 2
+	}
+	return week
 }

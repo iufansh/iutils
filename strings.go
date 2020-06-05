@@ -97,3 +97,17 @@ func WrapString(s string, lim uint) string {
 
 	return buf.String()
 }
+
+/**
+ * 判断是否包含中文
+ */
+func HasChinese(str string) bool {
+	var count int
+	for _, v := range str {
+		if unicode.Is(unicode.Han, v) {
+			count++
+			break
+		}
+	}
+	return count > 0
+}

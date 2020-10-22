@@ -7,6 +7,15 @@ import (
 	"strings"
 )
 
+// 获取文件大小，单位：B
+func CalcFileSize(filePath string) (int64, error) {
+	fi, err:=os.Stat(filePath)
+	if err != nil {
+		return 0, err
+	}
+	return fi.Size(), nil
+}
+
 // 判断文件或文件是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -14,6 +23,16 @@ func PathExists(path string) (bool, error) {
 		return true, nil
 	}
 	return false, err
+}
+
+// 确保文件夹存在，不存在则创建
+func EnsurePath(dstPath string) error {
+	if flag, _ := PathExists(dstPath); !flag {
+		if err := os.MkdirAll(dstPath, 0644); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func CopyFile(src, dst string) (int64, error) {

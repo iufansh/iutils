@@ -56,7 +56,7 @@ func ZipFilter(dstPath, dstName, src string, targetNames []string) (err error) {
 			return
 		}
 		if !hasName(targetNames, fh.Name) {
-			fmt.Println("notHasName=" + fh.Name)
+			//fmt.Println("notHasName=" + fh.Name)
 			return
 		}
 		//fh.Name = ""

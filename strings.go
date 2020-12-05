@@ -114,6 +114,18 @@ func HasChinese(str string) bool {
 	return count > 0
 }
 
+/**
+ * 判断是否英文单词
+ */
+func IsEnglishWord(word string) bool {
+	for _, v := range word {
+		if !unicode.IsLetter(v) {
+			return false
+		}
+	}
+	return true
+}
+
 // 删除字符串中的多余空格，有多个空格时，仅保留一个空格
 func DeleteExtraSpace(s string) string {
 	//删除字符串中的多余空格，有多个空格时，仅保留一个空格
@@ -128,4 +140,30 @@ func DeleteExtraSpace(s string) string {
 		spc_index = reg.FindStringIndex(string(s2))            //继续在字符串中搜索
 	}
 	return string(s2)
+}
+
+//利用正则表达式压缩字符串，去除空格或制表符
+func DeleteAllSpace(str string) string {
+	if str == "" {
+		return ""
+	}
+	//匹配一个或多个空白符的正则表达式
+	reg := regexp.MustCompile("\\s+")
+	return reg.ReplaceAllString(str, "")
+}
+
+// 首字母转大写
+func UpperFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
+}
+
+// 首字母转小写
+func LowerFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
 }

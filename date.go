@@ -43,6 +43,22 @@ func TimeSub(t1, t2 time.Time) int {
 	return int(t1.Sub(t2).Hours() / 24)
 }
 
+// 格式2006-01-02
+func ParseDate(d time.Time) time.Time {
+	if d.IsZero() {
+		return d
+	}
+	return time.Date(d.Year(), d.Month(), d.Day(), 0, 0, 0, 0, time.Local)
+}
+
+// 格式2006-01-02
+func FormatDate(d time.Time) string {
+	if d.IsZero() {
+		return ""
+	}
+	return d.Format("2006-01-02")
+}
+
 // 格式2006-01-02 15:04:05
 func FormatDatetime(d time.Time) string {
 	if d.IsZero() {
@@ -77,4 +93,18 @@ func WeekByDate(t time.Time) int {
 		week = (yearDay-firstWeekDays-1)/7 + 2
 	}
 	return week
+}
+
+/**
+获取本周周一的日期
+*/
+func GetFirstDateOfWeek() time.Time {
+	now := time.Now()
+
+	offset := int(time.Monday - now.Weekday())
+	if offset > 0 {
+		offset = -6
+	}
+
+	return time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local).AddDate(0, 0, offset)
 }

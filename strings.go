@@ -16,6 +16,9 @@ func RandomStr() string {
 
 //字串截取,截取前面
 func SubString(s string, pos, length int) string {
+	if pos < 0 {
+		pos = 0
+	}
 	runes := []rune(s)
 	var l int
 	if length == 0 {

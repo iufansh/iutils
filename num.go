@@ -117,6 +117,7 @@ func AnyToDecimal(num string, n int) int {
 	return int(new_num)
 }
 
+// 数字转化为两个字母+
 func Num2Letter(i int64) string {
 	i += 26
 	var j = i / 26

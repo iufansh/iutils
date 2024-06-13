@@ -101,7 +101,7 @@ func findKey(in string) int {
 }
 
 // 任意进制转10进制
-func AnyToDecimal(num string, n int) int {
+func AnyToDecimal(num string, n int) int64 {
 	var new_num float64
 	new_num = 0.0
 	nNum := len(strings.Split(num, "")) - 1
@@ -114,7 +114,7 @@ func AnyToDecimal(num string, n int) int {
 			break
 		}
 	}
-	return int(new_num)
+	return int64(new_num)
 }
 
 // 数字转化为两个字母+

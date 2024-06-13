@@ -16,7 +16,7 @@ func CalcFileSize(filePath string) (int64, error) {
 	return fi.Size(), nil
 }
 
-// 判断文件或文件是否存在
+// 判断文件夹或文件是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {

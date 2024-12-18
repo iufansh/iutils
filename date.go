@@ -1,38 +1,35 @@
 package iutils
 
 import (
-	"fmt"
-	"github.com/pkg/errors"
-	"io/ioutil"
-	"net/http"
-	"regexp"
-	"strconv"
-	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
+// 废弃，直接用本机时间了
 func GetNetTime() (time.Time, error) {
 	// {"api":"mtop.common.getTimestamp","v":"*","ret":["SUCCESS::接口调用成功"],"data":{"t":"1555314256704"}}
-	resp, err := http.Get("http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp")
-	if err != nil {
-		return time.Now(), errors.New("获取网络时间请求失败")
-	}
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	bodys := string(body)
+	// resp, err := http.Get("http://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp")
+	// if err != nil {
+	// 	return time.Now(), errors.New("获取网络时间请求失败")
+	// }
+	// defer resp.Body.Close()
+	// body, _ := ioutil.ReadAll(resp.Body)
+	// bodys := string(body)
 
-	if !strings.Contains(bodys, "SUCCESS::接口调用成功") {
-		return time.Now(), errors.New("接口调用失败：" + bodys)
-	}
-	regRule := "^{([\\s\\S]+)\"t\":\"([\\d]{13})\"([\\s\\S]+)}$"
-	reg := regexp.MustCompile(regRule)
-	results := reg.FindStringSubmatch(bodys)
-	if len(results) != 4 {
-		return time.Now(), errors.New("返回数据解析错误：" + bodys)
-	}
-	fmt.Println(results[2])
-	t, err := strconv.ParseInt(results[2], 10, 64)
-	return time.Unix(0, t*int64(time.Millisecond)), nil
+	// if !strings.Contains(bodys, "SUCCESS::接口调用成功") {
+	// 	return time.Now(), errors.New("接口调用失败：" + bodys)
+	// }
+	// regRule := "^{([\\s\\S]+)\"t\":\"([\\d]{13})\"([\\s\\S]+)}$"
+	// reg := regexp.MustCompile(regRule)
+	// results := reg.FindStringSubmatch(bodys)
+	// if len(results) != 4 {
+	// 	return time.Now(), errors.New("返回数据解析错误：" + bodys)
+	// }
+	// fmt.Println(results[2])
+	// t, err := strconv.ParseInt(results[2], 10, 64)
+	// return time.Unix(0, t*int64(time.Millisecond)), nil
+	return time.Now(), errors.New("获取网络时间请求失败")
 }
 
 // 计算两个日期相差几天
@@ -75,7 +72,7 @@ func FormatDatetimeKeepNumber(d time.Time) string {
 	return d.Format("20060102150405")
 }
 
-//判断时间是当年的第几周,周一为第一天
+// 判断时间是当年的第几周,周一为第一天
 func WeekByDate(t time.Time) int {
 	yearDay := t.YearDay()
 	yearFirstDay := t.AddDate(0, 0, -yearDay+1)
@@ -95,7 +92,7 @@ func WeekByDate(t time.Time) int {
 	return week
 }
 
-//判断时间是当年的第几周,周日为第一天
+// 判断时间是当年的第几周,周日为第一天
 func WeekByDate2(t time.Time) int {
 	yearDay := t.YearDay()
 	yearFirstDay := t.AddDate(0, 0, -yearDay+1)
@@ -107,7 +104,8 @@ func WeekByDate2(t time.Time) int {
 	return week
 }
 
-/**
+/*
+*
 获取本周周一的日期
 */
 func GetFirstDateOfWeek() time.Time {
@@ -197,7 +195,7 @@ func GetWeekDays(t time.Time, weekday time.Weekday) (string, string) {
 	if weekday == time.Sunday {
 		offset = int(time.Sunday - now.Weekday())
 		lastoffset = int(time.Saturday - now.Weekday())
-	} else if weekday == time.Monday{
+	} else if weekday == time.Monday {
 		offset := int(time.Monday - now.Weekday())
 		//周日做特殊判断 因为time.Monday = 0
 		if offset > 0 {

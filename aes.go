@@ -4,21 +4,28 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"io/ioutil"
+	"os"
 )
 
-//加密
+// 加密
 // 加密文件，并保存
 func AesEncryptFilePkcs5(srcFile, key, iv, destFile string) error {
-	f, err := ioutil.ReadFile(srcFile)
+	// todo 因为ioutil废弃了，改为os操作，这里没有测试
+	content, err := os.ReadFile(srcFile)
 	if err != nil {
 		return err
 	}
-	d, err := AesEncryptPkcs5(f, key, iv)
+	d, err := AesEncryptPkcs5(content, key, iv)
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(destFile, d, 0666)
+	file, err := os.OpenFile(destFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(string(d))
 	if err != nil {
 		return err
 	}
@@ -47,7 +54,7 @@ func AesEncrypt(origData []byte, key []byte, iv []byte, paddingFunc func([]byte,
 	return crypted, nil
 }
 
-//解密
+// 解密
 func AesDecryptPkcs5(crypted []byte, key string, iv string) ([]byte, error) {
 	return AesDecryptPkcs5Byte(crypted, []byte(key), []byte(iv))
 }
